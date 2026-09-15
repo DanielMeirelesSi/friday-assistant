@@ -1,0 +1,6 @@
+interface:
+  display_name: "Friday"
+  short_description: "Evidence-grounded repository documentation assistant"
+
+policy:
+  allow_implicit_invocation: false
