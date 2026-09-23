@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "generated_by": "friday",
+  "baseline": {
+    "git_commit": null,
+    "clean_worktree": true,
+    "validated_at": null
+  },
+  "project": {
+    "profiles": [
+      "fixture"
+    ],
+    "scopes": [
+      {
+        "id": "application",
+        "path": ".",
+        "kind": "application",
+        "purpose": "Fixture"
+      }
+    ],
+    "audiences": [],
+    "critical_mechanisms": []
+  },
+  "canonical_sources": [],
+  "documents": [],
+  "claims": [
+    "C001"
+  ],
+  "change_rules": [],
+  "documentation_decisions": [],
+  "unknowns": []
+}

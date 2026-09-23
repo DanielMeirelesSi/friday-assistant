@@ -47,6 +47,26 @@ def load_json(path: Path) -> dict:
     return data
 
 
+def resolve_repo_path(repo: Path, path: Path) -> Path:
+    """Resolve CLI paths relative to the repository root when not absolute."""
+    return path.resolve() if path.is_absolute() else (repo / path).resolve()
+
+
+def resolve_document_path(repo: Path, rel: str) -> Path:
+    """Resolve a repository-relative document path without allowing escape."""
+    path = Path(rel)
+    if path.is_absolute():
+        raise StateError(f"document path must be repository-relative: {rel}")
+
+    repo_root = repo.resolve()
+    full = (repo_root / path).resolve()
+    try:
+        full.relative_to(repo_root)
+    except ValueError as exc:
+        raise StateError(f"document path escapes repository: {rel}") from exc
+    return full
+
+
 def validate_state(state: dict, repo: Path) -> None:
     missing = sorted(REQUIRED_TOP_LEVEL - set(state))
     if missing:
@@ -109,12 +129,13 @@ def validate_state(state: dict, repo: Path) -> None:
         if not rel:
             raise StateError("document missing path")
 
+        full = resolve_document_path(repo, rel)
+
         for claim_id in doc.get("related_claims", []):
             if claim_id not in claim_set:
                 raise StateError(f"{rel} references unknown claim: {claim_id}")
 
         if doc.get("ownership") == "managed":
-            full = repo / Path(rel)
             if not full.is_file():
                 raise StateError(f"managed document missing: {rel}")
             stored_hash = doc.get("content_hash")
@@ -135,16 +156,11 @@ def validate_state(state: dict, repo: Path) -> None:
                 )
 
 
-def canonical_bytes(state: dict) -> bytes:
-    return (json.dumps(state, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
-
-
 def install(candidate: Path, target: Path, repo: Path) -> None:
     state = load_json(candidate)
     validate_state(state, repo)
 
     target.parent.mkdir(parents=True, exist_ok=True)
-    data = canonical_bytes(state)
 
     fd, temp_name = tempfile.mkstemp(
         prefix=target.name + ".",
@@ -152,10 +168,11 @@ def install(candidate: Path, target: Path, repo: Path) -> None:
         dir=str(target.parent),
     )
     try:
-        with os.fdopen(fd, "wb") as f:
-            f.write(data)
-            f.flush()
-            os.fsync(f.fileno())
+        with candidate.open("rb") as source, os.fdopen(fd, "wb") as dest:
+            for chunk in iter(lambda: source.read(1024 * 1024), b""):
+                dest.write(chunk)
+            dest.flush()
+            os.fsync(dest.fileno())
 
         # Re-parse and re-validate the exact bytes that will be installed.
         temp_path = Path(temp_name)
@@ -196,9 +213,9 @@ def main() -> int:
             return 0
 
         if args.command == "install":
-            candidate = Path(args.candidate)
-            target = Path(args.target)
             repo = Path(args.repo).resolve()
+            candidate = resolve_repo_path(repo, Path(args.candidate))
+            target = resolve_repo_path(repo, Path(args.target))
             install(candidate, target, repo)
             print(f"state installed: {target}")
             return 0

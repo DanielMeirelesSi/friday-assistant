@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "generated_by": "friday",
+  "baseline": {
+    "git_commit": null,
+    "clean_worktree": true,
+    "validated_at": null
+  },
+  "project": [],
+  "canonical_sources": [],
+  "documents": [],
+  "claims": [],
+  "change_rules": [],
+  "documentation_decisions": [],
+  "unknowns": []
+}

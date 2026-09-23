@@ -19,7 +19,52 @@ function Read-State([string]$Path) {
   if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
     throw "state file not found: $Path"
   }
-  return Get-Content -Raw -Encoding UTF8 -LiteralPath $Path | ConvertFrom-Json
+
+  $raw = Get-Content -Raw -Encoding UTF8 -LiteralPath $Path
+  $trimmed = $raw.TrimStart()
+
+  if (-not $trimmed.StartsWith("{")) {
+    throw "state root must be a JSON object"
+  }
+
+  return $raw | ConvertFrom-Json
+}
+
+function Resolve-RepoPath([string]$RepoRoot, [string]$Path) {
+    if ([System.IO.Path]::IsPathRooted($Path)) {
+        return [System.IO.Path]::GetFullPath($Path)
+    }
+
+    return [System.IO.Path]::GetFullPath((Join-Path $RepoRoot $Path))
+}
+
+function Resolve-DocumentPath([string]$RepoRoot, [string]$RelativePath) {
+    if ([System.IO.Path]::IsPathRooted($RelativePath)) {
+        throw "document path must be repository-relative: $RelativePath"
+    }
+
+    $trimChars = [char[]]@(
+        [System.IO.Path]::DirectorySeparatorChar,
+        [System.IO.Path]::AltDirectorySeparatorChar
+    )
+    $repoFull = [System.IO.Path]::GetFullPath($RepoRoot).TrimEnd($trimChars)
+    $fullPath = [System.IO.Path]::GetFullPath((Join-Path $repoFull $RelativePath))
+    $repoPrefix = $repoFull + [System.IO.Path]::DirectorySeparatorChar
+    $comparison = if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
+        [System.StringComparison]::OrdinalIgnoreCase
+    }
+    else {
+        [System.StringComparison]::Ordinal
+    }
+
+    if (
+        $fullPath -ne $repoFull -and
+        -not $fullPath.StartsWith($repoPrefix, $comparison)
+    ) {
+        throw "document path escapes repository: $RelativePath"
+    }
+
+    return $fullPath
 }
 
 function Validate-State($StateObject, [string]$RepoRoot) {
@@ -157,6 +202,7 @@ function Validate-State($StateObject, [string]$RepoRoot) {
         }
 
         $docPaths += $doc.path
+        $fullPath = Resolve-DocumentPath $RepoRoot $doc.path
 
         foreach ($claimId in @($doc.related_claims)) {
             if ($claimIds -notcontains $claimId) {
@@ -165,8 +211,6 @@ function Validate-State($StateObject, [string]$RepoRoot) {
         }
 
         if ($doc.ownership -eq "managed") {
-            $fullPath = Join-Path $RepoRoot $doc.path
-
             if (-not (Test-Path -LiteralPath $fullPath -PathType Leaf)) {
                 throw "managed document missing: $($doc.path)"
             }
@@ -216,22 +260,29 @@ if (-not $Candidate) {
   throw "-Candidate is required for install"
 }
 
-$candidatePath = [System.IO.Path]::GetFullPath((Join-Path $repoRoot $Candidate))
+$candidatePath = Resolve-RepoPath $repoRoot $Candidate
 $candidateObject = Read-State $candidatePath
 Validate-State $candidateObject $repoRoot
 
-$targetPath = [System.IO.Path]::GetFullPath((Join-Path $repoRoot $Target))
+$targetPath = Resolve-RepoPath $repoRoot $Target
 $targetDir = Split-Path -Parent $targetPath
 if (-not $targetDir) {
   $targetDir = "."
 }
 New-Item -ItemType Directory -Force -Path $targetDir | Out-Null
 
-$temp = Join-Path $targetDir ((Split-Path -Leaf $targetPath) + ".tmp")
-Copy-Item -LiteralPath $candidatePath -Destination $temp -Force
+$temp = Join-Path $targetDir ((Split-Path -Leaf $targetPath) + "." + [guid]::NewGuid().ToString("N") + ".tmp")
+try {
+  Copy-Item -LiteralPath $candidatePath -Destination $temp -Force
 
-$roundTrip = Read-State $temp
-Validate-State $roundTrip $repoRoot
+  $roundTrip = Read-State $temp
+  Validate-State $roundTrip $repoRoot
 
-Move-Item -LiteralPath $temp -Destination $targetPath -Force
+  Move-Item -LiteralPath $temp -Destination $targetPath -Force
+}
+finally {
+  if (Test-Path -LiteralPath $temp -PathType Leaf) {
+    Remove-Item -LiteralPath $temp -Force
+  }
+}
 Write-Output "state installed: $Target"

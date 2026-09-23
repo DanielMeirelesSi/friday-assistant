@@ -1,0 +1,38 @@
+name: Validation
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  python-guard:
+    name: Python guard contract
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Run guard contract tests
+        run: python -m unittest discover -s tests -v
+
+  guard-parity:
+    name: Python / PowerShell parity
+    runs-on: windows-latest
+    env:
+      FRIDAY_REQUIRE_POWERSHELL: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Run guard contract and parity tests
+        run: python -m unittest discover -s tests -v

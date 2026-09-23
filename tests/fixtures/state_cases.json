@@ -1,0 +1,156 @@
+[
+  {
+    "id": "valid-basic",
+    "file": "states/valid-basic.json",
+    "valid": true
+  },
+  {
+    "id": "valid-managed-document",
+    "file": "states/valid-managed-document.json",
+    "valid": true
+  },
+  {
+    "id": "invalid-json",
+    "file": "states/invalid-json.json",
+    "valid": false,
+    "invariant": "json"
+  },
+  {
+    "id": "root-array",
+    "file": "states/root-array.json",
+    "valid": false,
+    "invariant": "root"
+  },
+  {
+    "id": "missing-version",
+    "file": "states/missing-version.json",
+    "valid": false,
+    "invariant": "version"
+  },
+  {
+    "id": "unsupported-version",
+    "file": "states/unsupported-version.json",
+    "valid": false,
+    "invariant": "version"
+  },
+  {
+    "id": "project-not-object",
+    "file": "states/project-not-object.json",
+    "valid": false,
+    "invariant": "project"
+  },
+  {
+    "id": "scopes-not-array",
+    "file": "states/scopes-not-array.json",
+    "valid": false,
+    "invariant": "scopes"
+  },
+  {
+    "id": "scope-not-object",
+    "file": "states/scope-not-object.json",
+    "valid": false,
+    "invariant": "scope"
+  },
+  {
+    "id": "scope-missing-id",
+    "file": "states/scope-missing-id.json",
+    "valid": false,
+    "invariant": "scope"
+  },
+  {
+    "id": "duplicate-scope-id",
+    "file": "states/duplicate-scope-id.json",
+    "valid": false,
+    "invariant": "scope"
+  },
+  {
+    "id": "canonical-sources-not-array",
+    "file": "states/canonical-sources-not-array.json",
+    "valid": false,
+    "invariant": "canonical source"
+  },
+  {
+    "id": "canonical-source-not-object",
+    "file": "states/canonical-source-not-object.json",
+    "valid": false,
+    "invariant": "canonical source"
+  },
+  {
+    "id": "unknown-scope-reference",
+    "file": "states/unknown-scope-reference.json",
+    "valid": false,
+    "invariant": "scope"
+  },
+  {
+    "id": "claims-not-array",
+    "file": "states/claims-not-array.json",
+    "valid": false,
+    "invariant": "claims"
+  },
+  {
+    "id": "claim-not-object",
+    "file": "states/claim-not-object.json",
+    "valid": false,
+    "invariant": "claim"
+  },
+  {
+    "id": "claim-missing-id",
+    "file": "states/claim-missing-id.json",
+    "valid": false,
+    "invariant": "claim"
+  },
+  {
+    "id": "duplicate-claim-id",
+    "file": "states/duplicate-claim-id.json",
+    "valid": false,
+    "invariant": "claim"
+  },
+  {
+    "id": "documents-not-array",
+    "file": "states/documents-not-array.json",
+    "valid": false,
+    "invariant": "document"
+  },
+  {
+    "id": "document-not-object",
+    "file": "states/document-not-object.json",
+    "valid": false,
+    "invariant": "document"
+  },
+  {
+    "id": "document-missing-path",
+    "file": "states/document-missing-path.json",
+    "valid": false,
+    "invariant": "path"
+  },
+  {
+    "id": "unknown-related-claim",
+    "file": "states/unknown-related-claim.json",
+    "valid": false,
+    "invariant": "claim"
+  },
+  {
+    "id": "claim-unknown-document",
+    "file": "states/claim-unknown-document.json",
+    "valid": false,
+    "invariant": "document"
+  },
+  {
+    "id": "managed-document-missing",
+    "file": "states/managed-document-missing.json",
+    "valid": false,
+    "invariant": "managed document"
+  },
+  {
+    "id": "managed-document-hash-mismatch",
+    "file": "states/managed-document-hash-mismatch.json",
+    "valid": false,
+    "invariant": "hash"
+  },
+  {
+    "id": "document-path-escape",
+    "file": "states/document-path-escape.json",
+    "valid": false,
+    "invariant": "escapes repository"
+  }
+]
