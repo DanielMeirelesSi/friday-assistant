@@ -1,0 +1,47 @@
+[
+  {
+    "id": "explicit-plan",
+    "request": "$friday plan",
+    "expected": "plan"
+  },
+  {
+    "id": "explicit-generate",
+    "request": "$friday generate",
+    "expected": "generate"
+  },
+  {
+    "id": "explicit-update",
+    "request": "$friday update",
+    "expected": "update"
+  },
+  {
+    "id": "explicit-audit",
+    "request": "$friday audit",
+    "expected": "audit"
+  },
+  {
+    "id": "natural-generate",
+    "request": "$friday documenta esse projeto",
+    "expected": "generate"
+  },
+  {
+    "id": "natural-update",
+    "request": "$friday atualiza a documentação",
+    "expected": "update"
+  },
+  {
+    "id": "natural-audit",
+    "request": "$friday confere a documentação",
+    "expected": "audit"
+  },
+  {
+    "id": "natural-plan",
+    "request": "$friday o que deveria ser documentado?",
+    "expected": "plan"
+  },
+  {
+    "id": "no-actionable-intent",
+    "request": "$friday",
+    "expected": "clarify"
+  }
+]

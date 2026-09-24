@@ -1,0 +1,101 @@
+[
+  {
+    "id": "plan-readonly",
+    "fixture": "plan-basic",
+    "request": "$friday o que deveria ser documentado neste projeto?",
+    "expected_workflow": "plan",
+    "contract": {
+      "require_clean": true,
+      "must_not_exist": [
+        ".friday/state.json",
+        ".friday/state.next.json"
+      ]
+    },
+    "manual_assertions": [
+      "The response is a documentation plan rather than generated documentation.",
+      "The response uses repository-relative paths.",
+      "No build, test, install, or generation command is run merely to raise confidence."
+    ]
+  },
+  {
+    "id": "audit-readonly-drift",
+    "fixture": "audit-drift",
+    "request": "$friday confere se a documentação ainda está correta",
+    "expected_workflow": "audit",
+    "contract": {
+      "require_clean": true,
+      "must_not_exist": [
+        ".friday/state.json",
+        ".friday/state.next.json"
+      ]
+    },
+    "manual_assertions": [
+      "The audit identifies the 99-second documentation claim as drift against src/config.js.",
+      "The finding includes severity and confidence.",
+      "The response does not invent an independent finding solely for a derived effect."
+    ]
+  },
+  {
+    "id": "generate-idempotent",
+    "fixture": "generate-idempotent",
+    "request": "$friday documenta esse projeto",
+    "expected_workflow": "generate",
+    "contract": {
+      "comparison": "checkpoint",
+      "require_clean": true,
+      "state_valid": true,
+      "must_not_exist": [
+        ".friday/state.next.json"
+      ]
+    },
+    "manual_assertions": [
+      "The first generation may add or enrich useful README.md, docs/runtime.md, and .friday/state.json content.",
+      "The same request is run a second time after checkpointing the first result.",
+      "The second generation reports no documentation change when the first result is already converged.",
+      "No timestamp-only or stylistic churn is introduced on the second generation."
+    ]
+  },
+  {
+    "id": "update-minimal-diff",
+    "fixture": "update-minimal",
+    "post_baseline_changes": {
+      "src/config.js": "export const POLL_INTERVAL_MS = 30_000;\n",
+      "tests/poller.test.js": "import assert from \"node:assert/strict\";\nimport test from \"node:test\";\nimport { getPollIntervalMs } from \"../src/poller.js\";\n\ntest(\"uses the configured polling interval\", () => {\n  assert.equal(getPollIntervalMs(), 30_000);\n});\n"
+    },
+    "request": "$friday atualiza a documentação",
+    "expected_workflow": "update",
+    "contract": {
+      "allowed_changes": [
+        "docs/runtime.md",
+        ".friday/state.json"
+      ],
+      "required_changes": [
+        "docs/runtime.md",
+        ".friday/state.json"
+      ],
+      "forbidden_changes": [
+        "README.md",
+        "src/**",
+        "tests/**",
+        "package.json"
+      ],
+      "must_contain": {
+        "docs/runtime.md": [
+          "30 seconds"
+        ],
+        ".friday/state.json": [
+          "30 seconds"
+        ]
+      },
+      "must_not_exist": [
+        ".friday/state.next.json"
+      ],
+      "state_valid": true
+    },
+    "manual_assertions": [
+      "The update revalidates the polling claim instead of assuming every changed source makes documentation wrong.",
+      "README.md remains untouched because its content is unaffected.",
+      "The report distinguishes documentation changes from project issues."
+    ]
+  }
+]

@@ -167,7 +167,7 @@ python <skill-root>/scripts/state_guard.py install   --candidate .friday/state.n
 
 On Windows, `py` or `python` may be used depending on availability.
 
-The guard MUST parse the candidate, validate required structure, scope references, managed document paths and hashes, serialize canonical JSON, and atomically replace the target only after validation succeeds.
+The guard MUST parse the candidate, validate required structure, scope references, managed document paths and hashes, preserve the validated candidate bytes, and atomically replace the target only after validation succeeds. Stable JSON serialization is the responsibility of the state producer before the candidate is handed to the guard.
 
 Delete the candidate after a successful install.
 
