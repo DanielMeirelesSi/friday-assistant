@@ -1,163 +1,134 @@
 ---
 name: friday
-description: Analyze a software repository and plan, generate, update, or audit evidence-grounded technical documentation. Use explicitly when the user invokes $friday to document a codebase, assess documentation drift, or maintain repository documentation.
+description: Route $friday requests through an evidence-grounded software engineering assistant platform. Documentation is currently the only implemented capability.
 ---
 
 # Friday
 
-Create and maintain technical documentation that represents the repository as it actually exists.
+Friday is a software engineering assistant platform based on evidence, bounded execution, proportional verification, and explicit authority.
 
+Friday has one public interface:
 
-## Intent routing
+```text
+$friday
+```
 
-The user does not need to name a workflow explicitly. Infer the appropriate workflow from the request after `$friday`.
+The platform coordinates intent, project context, capability routing, evidence, risk, authority, execution strategy, verification, convergence, completion, and optional persistence. Domain-specific standards belong to capabilities rather than to the Core.
 
-- Use `plan` when the user wants to analyze the repository and decide what documentation should exist without changing files.
-- Use `generate` when the user wants to create documentation for the repository or establish documentation for the first time.
-- Use `update` when documentation already exists and the user wants it synchronized with repository changes.
-- Use `audit` when the user wants to inspect, review, verify, or assess existing documentation without modifying it.
-- If the user explicitly names `plan`, `generate`, `update`, or `audit`, honor that workflow.
-- If intent is genuinely ambiguous and choosing the wrong workflow could modify files unexpectedly, ask a concise clarification question.
-- Never choose a write workflow merely because documentation could be improved. Respect the user's requested intent.
-## Core invariants
+## Platform boundary
 
-Always follow these rules:
+The universal Core contract is defined in:
 
-- Treat the current repository as the primary source of technical truth.
-- Never fabricate behavior, architecture, history, infrastructure, guarantees, or operational procedures.
-- Gather evidence before making material technical claims.
-- Distinguish declared behavior from observed or verified behavior.
-- Treat missing evidence as unknown, not as proof of absence.
-- Detect and surface conflicts between code, configuration, schemas, tests, infrastructure, and existing documentation.
-- Prefer canonical structured sources such as OpenAPI, schemas, migrations, manifests, CI workflows, and infrastructure definitions over duplicated prose.
-- Analyze broadly, but document only what is relevant and useful.
-- Keep documentation proportional to the project's complexity.
-- Preserve valuable human-authored knowledge and respect protected or unmanaged documentation.
-- Never expose secret values found in the repository.
-- Do not modify application source code to make it match documentation.
-- Keep project consistency issues separate from durable documentation unless they are stable, reader-relevant limitations.
-- Do not infer runtime version requirements from lockfiles or dependency versions unless the repository explicitly establishes them.
-- Do not duplicate exact dependency versions in human-facing docs unless they define a reader-visible compatibility or setup requirement.
-- Revalidate managed documentation against the current Documentation Standard and writing rules, even when repository behavior has not changed.
-- Keep persistent state structurally minimal: scopes must represent real repository boundaries, claim evidence must directly support the claim, and evidence levels must match the actual support pattern.
-- Treat prior persisted claims as candidates to revalidate, not records to copy forward unchanged.
-- A missing referenced artifact is not automatically a project issue when the repository explicitly handles that absence as a supported fallback path.
-- If a final report summarizes a complete consistency check, report all material findings from that check or explicitly state that examples are non-exhaustive.
-- Never expose absolute repository filesystem paths in final user-facing reports when a repository-relative path exists.
-- When writing `.friday/state.json`, stage a candidate and validate/install it with a bundled state guard; never text-patch the live JSON.
-- On Windows PowerShell, prefer `scripts/state_guard.ps1`. Elsewhere, use `scripts/state_guard.py` when Python 3 is available.
-- Validate documentation after writing or changing it.
-- Prefer small, reviewable documentation diffs over stylistic rewrites.
-- Use repository-relative paths in user-facing reports whenever the source is inside the repository.
-- In plan/audit reports, render repository sources as plain inline-code paths such as `src/app/page.tsx:12`; do not create Markdown links to local filesystem paths.
-- Treat `plan` as static-analysis-first: do not run build, lint, test, install, generation, or other commands that may write files merely to improve confidence.
+- `references/core/platform.md`;
+- `references/core/operating-model.md`;
+- `references/core/context-model.md`;
+- `references/core/authority-and-verification.md`.
 
-## Modes
+For an actionable `$friday` request, load `references/core/platform.md` and `references/core/operating-model.md` as the universal Core bootstrap. Load `references/core/context-model.md` when deeper context acquisition, freshness, provenance, progressive disclosure, or routing/context decisions become materially relevant. Load `references/core/authority-and-verification.md` when risk, authority, side effects, or material execution are relevant, and before declaring material work complete. Load capability-specific and task-specific references only when materially relevant; do not load every reference merely because it exists. Begin with the request, applicable repository instructions, and minimum project context, then expand into capability knowledge, source files, tests, state, and tools only when evidence and task scope require it.
 
-Determine the requested mode from the user's invocation.
+During Phase 1, Documentation is the only implemented capability. Its knowledge and workflows remain the authoritative implementation for documentation tasks. Architecture, Testing, Security, Requirements, Software Design, and other future capabilities are platform concepts or roadmap work, not implemented capabilities in this skill.
 
-### `plan`
+Requests clearly outside Documentation must not be silently converted into `plan`, `generate`, `update`, or `audit`. Identify the requested intent and capability boundary; if the capability is not implemented, state that boundary and do not present a documentation workflow as a substitute.
 
-Analyze the repository and propose the appropriate documentation without changing project documentation.
+Do not create speculative capability directories, manifests, registries, agents, skills, schemas, or infrastructure merely because the platform may support them later.
 
-Read:
-
-- `references/documentation-standard.md`
-- `references/repository-analysis.md`
-- `references/evidence-and-trust.md`
-- `references/workflows/plan.md`
-
-### `generate`
-
-Analyze the repository, create or complete the appropriate documentation, validate it, and persist documentation state.
-
-Read:
-
-- `references/documentation-standard.md`
-- `references/repository-analysis.md`
-- `references/evidence-and-trust.md`
-- `references/documentation-writing.md`
-- `references/state-and-ownership.md`
-- `references/workflows/generate.md`
-
-### `update`
-
-Reconcile repository changes with existing documentation. Revalidate only the knowledge that may have been affected when focused analysis is safe, and make the smallest justified documentation changes.
-
-Read:
-
-- `references/documentation-standard.md` when scope or structure may need reconsideration
-- `references/repository-analysis.md` as needed for affected areas
-- `references/evidence-and-trust.md`
-- `references/documentation-writing.md`
-- `references/state-and-ownership.md`
-- `references/workflows/update.md`
-
-### `audit`
-
-Audit documentation against the current repository without modifying files. Report material drift, conflicts, unsupported claims, broken references, misplaced information, and project consistency issues separately.
-
-Read:
-
-- `references/documentation-standard.md`
-- `references/repository-analysis.md` as needed
-- `references/evidence-and-trust.md`
-- `references/documentation-writing.md`
-- `references/state-and-ownership.md`
-- `references/workflows/audit.md`
-
-## Default behavior
-
-When `$friday` is invoked without an explicit workflow name, infer the workflow from the user's natural-language intent using the Intent routing rules above.
-
-Do not default to `plan` when the request clearly implies `generate`, `update`, or `audit`.
-
-If the user invokes only `$friday` with no actionable intent, or if the intent is genuinely ambiguous and choosing a write workflow could modify files unexpectedly, ask a concise clarification question.
-
-## Repository instructions
+## Repository context and evidence
 
 Before acting:
 
-1. Discover and follow applicable repository instructions such as `AGENTS.md`.
-2. Respect project-local contribution, testing, build, security, and operational rules.
-3. Treat those instructions as project context, not as a replacement for evidence.
-4. If project instructions conflict with the user's explicit request or with safety constraints, surface the conflict instead of silently choosing.
+1. discover and follow applicable repository instructions such as `AGENTS.md`;
+2. establish the repository root, version-control state, relevant manifests, configuration, documentation, tests, and other high-information sources;
+3. load only the current project and task context needed for the request.
 
-## Analysis strategy
+Treat the current repository as the primary technical source of truth. Gather evidence before material conclusions, distinguish declared behavior from observed or verified behavior, preserve unknowns as unknown, and surface conflicts between code, configuration, tests, infrastructure, state, and documentation. Prefer the source closest to the claim. Never expose secrets or invent behavior, history, architecture, guarantees, or operational procedures.
 
-Use the Codex agent's native repository exploration capabilities.
+Use repository-relative paths in reports. Keep project consistency issues separate from durable documentation unless they are stable, reader-relevant limitations. Do not modify application source code to make documentation match prose.
 
-Do not mechanically read every file or recreate generic repository-scanning logic unless the workflow requires it. Start with high-information sources, then investigate deeper where evidence, complexity, conflicts, or uncertainty justify it.
+Execution depth must be proportional to complexity, risk, uncertainty, impact, reversibility, criticality, and authority. Verification is mandatory, but its depth varies. Passing a command or test does not by itself prove convergence with the user's intended outcome. Keep execution bounded by the request, granted authority, and task scope.
 
-For large or multi-scope repositories, parallelize independent investigation when doing so improves coverage or efficiency. Reconcile results before creating documentation claims.
+## Intent routing
 
-## State
+Infer intent from the request after `$friday`; the user does not need to name a workflow. Honor explicit workflow names when present:
 
-Project documentation state may live under `.friday/`.
+- `plan`: analyze the repository and decide what documentation should exist without changing project documentation;
+- `generate`: create or complete evidence-grounded documentation and persist validated documentation state;
+- `update`: reconcile existing documentation with repository changes using the smallest justified diff;
+- `audit`: inspect existing documentation against the repository without modifying it.
 
-- `.friday/config.yaml` is human-owned configuration when present.
-- `.friday/state.json` is machine-owned documentation state when present.
-- Stored state is an optimization and historical reference, never a higher authority than the current repository.
-- The skill must remain usable when `.friday/` does not exist.
-- In Git repositories, keep `.friday/` local by ensuring `.friday/` is present in `.git/info/exclude` before creating or updating persistent Friday state. Preserve existing exclude entries and do not modify `.gitignore` solely for Friday state.
+Natural-language requests route to the same Documentation workflows when their intent is clear:
 
-Read `references/state-and-ownership.md` before creating, trusting, or changing persistent state.
+- requests asking what should be documented route to `plan`;
+- requests asking to document or generate documentation route to `generate`;
+- requests asking to update or synchronize documentation route to `update`;
+- requests asking to check, inspect, or verify documentation route to `audit`.
 
-## Writing boundary
+If the request is ambiguous, lacks an actionable intent, or contains only `$friday`, ask for clarification. Never choose a write workflow merely because documentation could be improved.
 
-Only `generate` and `update` may modify documentation.
+## Documentation capability
 
-`plan` and `audit` are read-only with respect to project documentation.
+Documentation-specific truth, ownership, writing, state, and workflow rules remain in the existing references. Load them according to the selected workflow rather than loading every reference for every task.
 
-Do not perform destructive repository actions, deployments, migrations, package publication, secret rotation, infrastructure mutation, or source-code fixes as part of this skill.
+### `plan`
 
-If documentation analysis discovers a project problem, report it separately instead of repairing application code.
+Read:
+
+- `references/documentation-standard.md`;
+- `references/repository-analysis.md`;
+- `references/evidence-and-trust.md`;
+- `references/workflows/plan.md`.
+
+Read `references/state-and-ownership.md` when existing `.friday/` state is relevant. `plan` is static-analysis-first and must not run build, lint, test, install, generation, or other potentially writing commands merely to increase confidence. It does not modify project documentation or persistent state.
+
+### `generate`
+
+Read:
+
+- `references/documentation-standard.md`;
+- `references/repository-analysis.md`;
+- `references/evidence-and-trust.md`;
+- `references/documentation-writing.md`;
+- `references/state-and-ownership.md`;
+- `references/workflows/generate.md`.
+
+Create or complete only the smallest appropriate evidence-grounded documentation, preserve valuable existing human knowledge, validate applicable paths, commands, links, claims, and canonical relationships, and persist state only after successful validation. Capture the Git baseline before documentation writes. A repeated `generate` with unchanged inputs and valid documentation/state must converge to no content or state diff; do not introduce timestamp-only or stylistic churn.
+
+### `update`
+
+Read:
+
+- `references/evidence-and-trust.md`;
+- `references/documentation-writing.md`;
+- `references/state-and-ownership.md`;
+- `references/workflows/update.md`;
+- `references/documentation-standard.md` when scope or structure may need reconsideration;
+- `references/repository-analysis.md` for affected areas;
+- `references/workflows/plan.md` when broader replanning is needed.
+
+Revalidate changed or affected knowledge, preserve human edits, distinguish evidence changes from documentation drift, and make the smallest justified documentation diff. Do not silently erase human work or modify source code to satisfy stale documentation.
+
+### `audit`
+
+Read:
+
+- `references/documentation-standard.md`;
+- `references/repository-analysis.md` as needed;
+- `references/evidence-and-trust.md`;
+- `references/documentation-writing.md`;
+- `references/state-and-ownership.md`;
+- `references/workflows/audit.md`.
+
+Audit material claims, canonical sources, commands, paths, links, ownership, state, conflicts, and project issues without modifying project documentation, source code, dependencies, infrastructure, or persistent state.
+
+## Documentation state and write boundaries
+
+`.friday/` is local Documentation state, not Platform State. During Phase 1, `.friday/state.json` remains specific to Documentation and must not be generalized into a universal platform schema. The skill remains usable when `.friday/` does not exist. In Git repositories, preserve `.friday/` in `.git/info/exclude` and do not modify `.gitignore` solely for Friday state.
+
+Treat stored state as historical context and an optimization, never as stronger evidence than the current repository. Revalidate prior claims, scopes, sources, ownership, hashes, baselines, and decisions before relying on them. Keep state structurally minimal and limited to durable Documentation knowledge.
+
+Only `generate` and `update` may modify project documentation. `plan` and `audit` are read-only with respect to project documentation. Do not perform destructive repository actions, deployments, migrations, package publication, secret rotation, infrastructure mutation, or other side effects outside the requested scope and authority.
+
+When writing `.friday/state.json`, build a complete `.friday/state.next.json` candidate, validate and install it with the bundled state guard, and delete the candidate after successful installation. Never text-patch the live state. Prefer `scripts/state_guard.ps1` on Windows PowerShell and `scripts/state_guard.py` when Python 3 is available elsewhere. Managed-document `content_hash` values represent the exact validated file bytes.
 
 ## Completion
 
-Before finishing any mode:
-
-- separate established facts from unresolved questions;
-- surface material conflicts instead of hiding them;
-- avoid claiming more coverage than was actually analyzed;
-- keep the final user-facing report concise and oriented to decisions, changes, findings, and unresolved issues.
+Declare completion only when the objective, applicable acceptance criteria, evidence, verification, convergence, authority boundaries, and material side effects justify it. Separate established facts from unknowns, conflicts, project issues, and unable-to-verify areas. Report what changed, what was preserved, what was checked, what passed, and what remains unresolved. Do not claim broader coverage than was actually analyzed.
