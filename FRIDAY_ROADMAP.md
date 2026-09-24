@@ -106,41 +106,35 @@ A capability is not considered mature solely because an implementation exists.
 
 ## Phase 0 — Validation Foundation
 
-**Status:** In progress
+**Status:** Complete
 
 Objective: establish a regression baseline for `v1.0.0` before structural changes.
 
-### Implemented
+Completion baseline validated at `9833e19` (`test: normalize behavioral fixture line endings`).
 
-- state guard contract;
-- Python guard validation suite;
-- PowerShell guard validation suite;
-- Python / PowerShell parity checks;
-- malformed-state fixtures;
-- byte-preserving state installation checks;
-- repository path-boundary checks;
-- invalid-candidate safety checks;
-- CI validation workflow.
+### Delivered
 
-### Remaining
+- state guard contract with Python and PowerShell implementations;
+- malformed-state fixtures, byte-preserving installation, repository path-boundary checks, and invalid-candidate safety;
+- Python guard validation on Ubuntu and Python / PowerShell parity enforcement on Windows;
+- behavioral fixtures and specifications for `plan`, `generate`, `update`, and `audit`;
+- validated intent routing across 9/9 cases;
+- deterministic coverage for read-only contracts, idempotency/convergence, minimal-diff updates, and no-op results;
+- byte-deterministic behavioral fixtures across Linux and Windows;
+- automated repository assertions for observable effects and state validity.
 
-- documentation workflow fixtures;
-- intent-routing regression tests;
-- idempotency regression tests;
-- read-only behavior checks;
-- minimal-diff and no-op checks;
-- behavioral baseline for `plan`, `generate`, `update`, and `audit`.
+Deterministic repository assertions are automated in CI. Agentic and semantic behavior has a validated baseline, while execution of the model itself remains external/manual and is not simulated by CI.
 
 ### Exit Criteria
 
-Phase 0 is complete when:
+All Phase 0 exit criteria are satisfied:
 
-- deterministic guard tests are automated;
-- Python / PowerShell parity is enforced in CI;
-- current documentation workflows have regression coverage;
-- routing behavior is covered;
-- idempotency and read-only contracts are covered;
-- stable `v1.0.0` behavior can be checked before future refactors.
+- [x] deterministic guard tests are automated;
+- [x] Python / PowerShell parity is enforced in CI;
+- [x] current documentation workflows have regression coverage;
+- [x] routing behavior is covered;
+- [x] idempotency and read-only contracts are covered;
+- [x] stable `v1.0.0` behavior can be checked before future refactors.
 
 ---
 
