@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "generated_by": "friday",
+  "baseline": {
+    "git_commit": null,
+    "clean_worktree": true,
+    "validated_at": null
+  },
+  "project": {
+    "profiles": [
+      "library"
+    ],
+    "scopes": [
+      {
+        "id": "application",
+        "path": ".",
+        "kind": "application",
+        "purpose": "Polling fixture"
+      }
+    ],
+    "audiences": [
+      {
+        "id": "developer",
+        "scope": "application",
+        "name": "Developer"
+      }
+    ],
+    "critical_mechanisms": []
+  },
+  "canonical_sources": [
+    {
+      "id": "poll-config",
+      "scope": "application",
+      "topic": "poll interval",
+      "path": "src/config.js"
+    }
+  ],
+  "documents": [
+    {
+      "path": "README.md",
+      "ownership": "managed",
+      "scope": "application",
+      "related_claims": [],
+      "content_hash": "sha256:8ecbce4d63e147f550be1cd13489d3b0b6f18e50a3a7ecfec4119085f093d04c"
+    },
+    {
+      "path": "docs/runtime.md",
+      "ownership": "managed",
+      "scope": "application",
+      "related_claims": [
+        "C001"
+      ],
+      "content_hash": "sha256:1798359ef89936c653039b9c9637e66464d5ede028cd3e90c7b96776debcb3aa"
+    }
+  ],
+  "claims": [
+    {
+      "id": "C001",
+      "claim": "The poller module exposes a configured interval of 20 seconds.",
+      "evidence_level": "E2",
+      "sources": [
+        "src/config.js"
+      ],
+      "conflicts": [],
+      "documents": [
+        "docs/runtime.md"
+      ],
+      "status": "valid",
+      "last_validated": null
+    }
+  ],
+  "change_rules": [],
+  "documentation_decisions": [],
+  "unknowns": []
+}

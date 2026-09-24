@@ -42,6 +42,31 @@ class BehaviorEvalSpecTests(unittest.TestCase):
                     self.assertIsInstance(content, str)
                     self.assertTrue((fixture / path).is_file(), path)
 
+    def test_required_behavior_states_are_tracked(self) -> None:
+        cases = json.loads(BEHAVIOR_CASES.read_text(encoding="utf-8"))
+        required_paths = {
+            (FIXTURES / case["fixture"] / ".friday" / "state.json").relative_to(ROOT).as_posix()
+            for case in cases
+            if case["contract"].get("state_valid")
+        }
+
+        for relative_path in sorted(required_paths):
+            with self.subTest(path=relative_path):
+                self.assertTrue((ROOT / relative_path).is_file(), relative_path)
+                tracked = subprocess.run(
+                    ["git", "ls-files", "--error-unmatch", "--", relative_path],
+                    cwd=ROOT,
+                    text=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    check=False,
+                )
+                self.assertEqual(
+                    tracked.returncode,
+                    0,
+                    f"required fixture state is not tracked: {relative_path}\n{tracked.stderr}",
+                )
+
     def test_routing_cases_are_well_formed(self) -> None:
         cases = json.loads(ROUTING_CASES.read_text(encoding="utf-8"))
         expected_values = {"plan", "generate", "update", "audit", "clarify"}
