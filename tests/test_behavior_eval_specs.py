@@ -67,6 +67,20 @@ class BehaviorEvalSpecTests(unittest.TestCase):
                     f"required fixture state is not tracked: {relative_path}\n{tracked.stderr}",
                 )
 
+    def test_managed_behavior_fixture_files_use_lf(self) -> None:
+        cases = json.loads(BEHAVIOR_CASES.read_text(encoding="utf-8"))
+        for case in cases:
+            if not case["contract"].get("state_valid"):
+                continue
+            fixture = FIXTURES / case["fixture"]
+            state = json.loads((fixture / ".friday" / "state.json").read_text(encoding="utf-8"))
+            for document in state["documents"]:
+                if document.get("ownership") != "managed":
+                    continue
+                path = fixture / document["path"]
+                with self.subTest(path=path.relative_to(ROOT).as_posix()):
+                    self.assertNotIn(b"\r\n", path.read_bytes())
+
     def test_routing_cases_are_well_formed(self) -> None:
         cases = json.loads(ROUTING_CASES.read_text(encoding="utf-8"))
         expected_values = {"plan", "generate", "update", "audit", "clarify"}

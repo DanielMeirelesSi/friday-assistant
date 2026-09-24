@@ -1,0 +1,2 @@
+# Behavioral fixtures are compared and hashed byte-for-byte across platforms.
+tests/fixtures/behavior/** text eol=lf
