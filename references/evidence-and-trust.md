@@ -1,132 +1,23 @@
-# Evidence and Trust
+# Documentation Evidence and Trust
 
-Use this reference whenever `friday` makes, validates, updates, or audits technical claims.
+Use this reference whenever `friday` makes, validates, updates, or audits technical documentation claims.
 
-## Goal
+## Relationship to the Core Evidence Model
 
-Prevent plausible-sounding documentation from being mistaken for repository truth.
+Documentation depends on the universal model in `references/core/evidence.md`.
 
-A claim should only be as strong as its evidence.
+The Core defines:
 
-## Evidence levels
+- E0–E4;
+- source relevance and contextual authority;
+- negative evidence;
+- corroboration;
+- conflicts;
+- unknowns;
+- verification cost;
+- evidence freshness and revalidation.
 
-### E0: Unknown
-
-Evidence is insufficient.
-
-Use when a relevant question cannot be answered safely.
-
-### E1: Declared
-
-The claim is stated or implied by a declarative source such as:
-
-- existing documentation;
-- manifest;
-- metadata;
-- configuration;
-- comments;
-- examples.
-
-E1 proves declaration, not necessarily current runtime behavior.
-
-### E2: Observed
-
-The behavior or relationship is directly visible in implementation.
-
-Examples:
-
-- middleware verifies JWT;
-- code opens a PostgreSQL connection;
-- route registration exposes an endpoint;
-- config loader reads an environment variable.
-
-### E3: Corroborated
-
-Multiple independent sources support the same claim.
-
-Examples:
-
-```text
-implementation
-+
-tests
-+
-configuration
-```
-
-or:
-
-```text
-schema
-+
-runtime code
-+
-CI
-```
-
-### E4: Verified
-
-Safe execution, tests, introspection, or another direct check confirms the behavior.
-
-Examples:
-
-- test passes;
-- CLI help confirms command and flags;
-- build validates documented command;
-- route introspection confirms an endpoint.
-
-Evidence level is not a confidence percentage.
-
-## Claim strength
-
-Match wording to evidence.
-
-Strongly supported:
-
-> The API uses PostgreSQL for persistence.
-
-Only declared:
-
-> The project configuration declares PostgreSQL as the database.
-
-Insufficient:
-
-Do not turn it into a factual statement.
-
-## Source priority
-
-There is no universal priority list for every claim.
-
-Prefer the source closest to the behavior being documented.
-
-Examples:
-
-```text
-API contract
-â†’ OpenAPI / route definitions / integration tests
-```
-
-```text
-database structure
-â†’ schema / migrations
-```
-
-```text
-build command
-â†’ package/build configuration
-```
-
-```text
-CI behavior
-â†’ workflow definitions
-```
-
-```text
-historical rationale
-â†’ ADR / commit-era design record
-```
-
-A source may be canonical for one claim and weak for another.
+This reference applies those rules to documentation maintenance, persisted documentation claims, and human-facing documentation. It does not redefine the universal model.
 
 ## Repository truth vs documentation
 
@@ -135,30 +26,16 @@ Existing documentation is evidence, not authority.
 If documentation conflicts with current implementation:
 
 1. identify the conflict;
-2. gather stronger/current sources;
+2. gather stronger or more current sources;
 3. determine current behavior when possible;
 4. mark the prose as potentially stale;
-5. preserve historical rationale if it remains valuable and clearly historical.
+5. preserve historical rationale when it remains valuable and is clearly historical.
 
-## Negative evidence
+The current repository remains the primary technical source of truth for current behavior.
 
-Failure to find something normally does not prove absence.
+## Evidence Ledger for documentation maintenance
 
-Avoid:
-
-> The project does not support refresh tokens.
-
-Prefer:
-
-> No refresh-token mechanism was identified in the analyzed sources.
-
-A true absence claim requires stronger evidence, such as a closed public contract or explicit supported-feature definition.
-
-## Evidence Ledger
-
-Persist only claims that materially support documentation.
-
-Suggested conceptual fields:
+Persist only claims that materially support documentation maintenance. A Documentation Evidence Ledger may use these conceptual fields:
 
 ```text
 id
@@ -171,45 +48,23 @@ status
 last_validated
 ```
 
-Do not record every import, function, or file.
+The ledger exists to maintain documentation, not to model the entire repository. Do not record every import, function, or file.
 
-The ledger exists to maintain documentation, not to model the entire repository.
+## Documentation claim status
 
-## Claim status
+Useful statuses for persisted documentation claims are:
 
-Useful internal statuses:
+- `valid`;
+- `revalidation_required`;
+- `conflicting`;
+- `unsupported`;
+- `unknown`.
 
-- valid;
-- revalidation_required;
-- conflicting;
-- unsupported;
-- unknown.
+Use the E0–E4 levels from the Core. E3 is valid for a persisted claim only when independent sources corroborate the same material proposition; sources that support different clauses do not qualify.
 
-## Stale evidence
+## Persisted claim and source precision
 
-When a source changes, related claims require revalidation.
-
-A changed source does not automatically invalidate the claim.
-
-Example:
-
-```text
-src/auth/token.ts changed
-â†’ JWT claim requires revalidation
-```
-
-not:
-
-```text
-src/auth/token.ts changed
-â†’ JWT documentation is wrong
-```
-
-## Claim-source precision
-
-Every source attached to a persisted claim should directly support that claim or a clearly identifiable part of it.
-
-Do not attach contextual sources merely because they are related to the topic.
+Every source attached to a persisted documentation claim must directly support the exact proposition or a clearly identifiable material clause. Remove sources that provide only adjacent context.
 
 Example:
 
@@ -224,156 +79,46 @@ Not direct evidence:
 .gitignore
 ```
 
-If `.gitignore` supports a separate claim about secret-file handling, record that separately if the claim is worth persisting.
+If a related source supports a separate documentation claim about secret-file handling, record that claim separately only if it is worth maintaining.
 
-## Mandatory claim revalidation
+## Mandatory semantic revalidation of persisted claims
 
-When prior state exists, never accept an existing claim's wording, source list, or evidence level merely because the referenced files still exist.
+When prior Documentation state exists, never accept a claim's wording, source list, or evidence level merely because the referenced files still exist.
 
 For every persisted claim:
 
 1. restate the exact proposition being persisted;
 2. map each source to the exact words or clause it supports;
-3. remove any source that supports only adjacent context;
+3. remove sources that support only adjacent context;
 4. split materially different propositions when useful;
-5. recalculate the evidence level from the resulting support pattern.
+5. recalculate the E0–E4 level using the Core Evidence Model and its same-proposition corroboration rule;
+6. assign the documentation-specific claim status.
 
 A successful path-existence or hash check is not semantic claim validation.
 
-## Compound claims and evidence levels
+## State and document relationships
 
-Do not inflate evidence level merely because a compound sentence cites multiple files.
+Persisted claims should identify the documentation they support, and document records may identify related claims and direct canonical sources. Keep these relationships limited to maintained Documentation knowledge.
 
-E3 requires independent sources to corroborate the same material proposition.
+When a source changes, mark dependent documentation claims for targeted revalidation. A changed source does not automatically make the claim false.
 
-Example that is NOT automatically E3:
+Stored `.friday/state.json` is historical context and a maintenance optimization, never stronger evidence than the current repository:
 
 ```text
-Claim:
-Runtime requires A/B/C, while the local helper additionally requires D.
-
-Source 1:
-proves runtime A/B/C
-
-Source 2:
-proves helper D
+current repository
+>
+stored state
 ```
 
-Those sources support different clauses. Either:
+When stored state conflicts with current sources, correct the state after semantic revalidation. Do not generalize `.friday/state.json` into Platform State.
 
-- split the sentence into separate claims; or
-- keep the combined claim at the strongest level justified for the whole statement, normally E2 when both clauses are directly observed but not independently corroborated.
+## Documentation conflicts
 
-Use E3 only when two or more independent sources support the same proposition.
+Apply the Core conflict rule to documentation claims. Use the `conflicting` status only when relevant sources disagree about the same material claim.
 
-## Corroboration
+A missing artifact referenced by another source, a broken script, stale generated output, or another repository inconsistency is normally a Project Issue or observed inconsistency, not automatically a source conflict. Do not silently erase conflicting human documentation when it may contain historical context.
 
-Prefer independent corroboration for high-impact claims.
-
-Useful combinations:
-
-- implementation + tests;
-- schema + migration;
-- config + loader;
-- build script + CI;
-- public API definition + integration test.
-
-Avoid counting duplicated prose as independent evidence.
-
-## Existing tests
-
-Tests can establish behavior when they are current and meaningful.
-
-Treat disabled, skipped, obsolete, or fixture-only tests cautiously.
-
-## Configuration evidence
-
-A variable in `.env.example` proves expected configuration surface more strongly than a random environment access in dead code, but neither alone necessarily proves production use.
-
-Trace actual loading when behavior matters.
-
-## Dependency evidence
-
-Manifest or lockfile presence proves dependency declaration/resolution metadata.
-
-It does not by itself prove:
-
-- supported runtime version;
-- supported package-manager version;
-
-- active use;
-- production use;
-- architectural importance;
-- the purpose for which the dependency is used.
-
-Follow imports, initialization, configuration, or runtime integration before stronger claims.
-
-## Folder-name evidence
-
-Folder names are navigation hints, not architecture proof.
-
-Do not claim Clean Architecture, MVC, DDD, hexagonal architecture, microservices, or similar patterns solely from names.
-
-## Generated code
-
-Generated files may prove output shape but are usually not the preferred source of truth when the generator input is known.
-
-Record source-to-output relationships instead.
-
-## Historical claims
-
-Historical rationale requires historical evidence.
-
-Good sources:
-
-- ADRs;
-- design documents;
-- recorded decision logs;
-- relevant historical project documentation.
-
-Current code is normally insufficient.
-
-## Operational claims
-
-Operational instructions require especially strong evidence because incorrect commands can be dangerous.
-
-Prefer:
-
-- maintained runbooks;
-- CI/CD workflows;
-- deployment scripts;
-- infrastructure definitions;
-- tested operational tooling.
-
-Do not fabricate recovery, rollback, migration, or production commands.
-
-## Security claims
-
-Avoid broad claims such as:
-
-- secure;
-- safe;
-- production-ready;
-- compliant;
-- hardened.
-
-Document specific controls and boundaries instead.
-
-Example:
-
-> Requests to `/admin/*` pass through the role-check middleware.
-
-is preferable to:
-
-> The admin API is secure.
-
-## Conflicts
-
-Use `conflicting` only when two or more relevant sources disagree about the same material claim.
-
-A missing artifact referenced by another source, a broken script, or stale generated output is normally a Project Issue or a valid observed inconsistency, not a source conflict.
-
-For a material conflict record:
+For a material documentation conflict, retain:
 
 ```text
 claim/topic
@@ -384,29 +129,19 @@ remaining uncertainty
 affected documentation
 ```
 
-Do not silently erase conflicting human documentation when it may contain historical context.
+## Material unknowns for Documentation
 
-## Unknowns
+Record only unknowns that affect reader understanding, documentation decisions, safe setup or operation, a public contract, or a critical mechanism.
 
-Record only unknowns material to reader understanding or documentation decisions.
+Useful example:
 
-Useful unknown:
+> Production backup strategy could not be determined from repository sources.
 
-> Production backup strategy could not be determined.
+Do not turn an absence of discovery into a statement that a feature is unsupported. Low-value historical or incidental unknowns need not be persisted or exposed.
 
-Low-value unknown:
+## Evidence in human-facing documentation
 
-> The reason a local helper was named this way could not be determined.
-
-## Verification cost
-
-Do not perform expensive or risky verification merely to upgrade evidence level.
-
-Use the minimum verification necessary for defensible documentation.
-
-## Evidence in human-facing docs
-
-Do not pollute normal documentation with evidence codes or citations to source files after every sentence.
+Normal project documentation should read like project documentation, not like an internal evidence report. Do not add evidence codes or source-file citations after every sentence.
 
 Expose evidence explicitly when it improves reviewability, for example in:
 
@@ -415,9 +150,7 @@ Expose evidence explicitly when it improves reviewability, for example in:
 - conflict reports;
 - uncertain high-impact claims.
 
-Normal project docs should read like project documentation.
-
-## Audit findings
+## Documentation audit findings
 
 A finding should state enough evidence for a human to review it without exposing internal reasoning.
 
@@ -441,27 +174,18 @@ src/security/token.ts
 tests/auth.spec.ts
 ```
 
-## Trust rule
+Keep severity and confidence separate. A finding's impact does not by itself establish its certainty.
 
-Stored `.friday/state.json` is never stronger evidence than the repository.
+## Final checks before writing or preserving documentation
 
-When stored state conflicts with current sources:
-
-```text
-current repository
->
-stored state
-```
-
-The state should be corrected after revalidation.
-
-## Final test
-
-Before writing or preserving a material claim, ask:
+Before writing or preserving a material documentation claim, ask:
 
 1. What exactly is being claimed?
-2. Which source supports it?
-3. Does that source prove this claim or only something adjacent?
-4. Is another source in conflict?
-5. Is the wording stronger than the evidence?
-6. Would an unknown or qualified statement be more accurate?
+2. Which source directly supports it?
+3. Does each attached source support the claim or only adjacent context?
+4. Is another relevant source in conflict?
+5. Is the wording stronger than the E0–E4 support allows?
+6. Does E3 have independent support for the same material proposition?
+7. Would an unknown or qualified statement be more accurate?
+8. If the claim is persisted, has it been semantically revalidated against current sources?
+9. Which documents, state records, or relationships depend on the claim?

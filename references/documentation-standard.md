@@ -453,27 +453,11 @@ Do not confuse "not discovered" with "not supported".
 
 ## Evidence model
 
-Use the following internal evidence scale when helpful.
+Documentation uses the universal Evidence Model in `references/core/evidence.md`.
 
-- **E0 Unknown**: evidence is insufficient.
-- **E1 Declared**: stated in docs, metadata, config, comments, or manifests.
-- **E2 Observed**: directly observable in implementation.
-- **E3 Corroborated**: multiple independent sources support the conclusion.
-- **E4 Verified**: safe execution, tests, or introspection confirmed it.
+That model defines E0–E4, source relevance, negative evidence, corroboration, conflicts, unknowns, verification cost, and evidence freshness. These levels are evidence-quality categories, not probabilities.
 
-These are evidence-quality categories, not probabilities.
-
-## Negative evidence
-
-Absence of discovery is usually not proof of nonexistence.
-
-Prefer:
-
-> No refresh-token mechanism was identified in the analyzed sources.
-
-over:
-
-> The project has no refresh-token mechanism.
+For Documentation, material technical claims MUST have support appropriate to their wording. Documentation MUST preserve unknowns, qualify claims when support is insufficient, and use direct source mapping when claims are persisted.
 
 ## Evidence Ledger
 
@@ -491,7 +475,7 @@ The ledger does not need to appear in human-facing docs.
 
 ## Source conflicts
 
-When sources disagree:
+Apply the Core conflict rule when sources disagree about the same material proposition. For Documentation:
 
 1. detect the conflict;
 2. record relevant sources;
