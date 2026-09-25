@@ -1,0 +1,84 @@
+[
+  {
+    "id": "documentation-natural-generate",
+    "request": "$friday documenta esse projeto",
+    "expected_capability": "documentation",
+    "expected_disposition": "route",
+    "expected_workflow": "generate",
+    "manual_assertions": [
+      "The selected capability is Documentation.",
+      "The request routes to the Documentation generate workflow.",
+      "Existing Documentation contracts remain in force, including evidence-grounded generation, validated state, and generate convergence."
+    ]
+  },
+  {
+    "id": "documentation-natural-plan",
+    "request": "$friday o que deveria ser documentado neste projeto?",
+    "expected_capability": "documentation",
+    "expected_disposition": "route",
+    "expected_workflow": "plan",
+    "manual_assertions": [
+      "The selected capability is Documentation.",
+      "The request routes to the Documentation plan workflow.",
+      "The existing Documentation plan read-only contract remains in force."
+    ]
+  },
+  {
+    "id": "documentation-explicit-audit",
+    "request": "$friday audit",
+    "expected_capability": "documentation",
+    "expected_disposition": "route",
+    "expected_workflow": "audit",
+    "manual_assertions": [
+      "The selected capability is Documentation.",
+      "The explicit request routes to the Documentation audit workflow.",
+      "The existing Documentation audit read-only contract remains in force."
+    ]
+  },
+  {
+    "id": "unsupported-architecture",
+    "request": "$friday analise a arquitetura deste sistema",
+    "expected_capability": "architecture",
+    "expected_disposition": "unsupported",
+    "manual_assertions": [
+      "The request is not converted to plan, generate, update, or audit.",
+      "The response does not claim that Architecture is implemented.",
+      "The project is not modified.",
+      "The unsupported capability limitation is communicated concisely."
+    ]
+  },
+  {
+    "id": "unsupported-testing",
+    "request": "$friday crie uma estratégia de testes para este sistema",
+    "expected_capability": "testing",
+    "expected_disposition": "unsupported",
+    "manual_assertions": [
+      "The request is not converted to plan, generate, update, or audit.",
+      "The response does not claim that Testing is implemented.",
+      "The project is not modified.",
+      "The unsupported capability limitation is communicated concisely."
+    ]
+  },
+  {
+    "id": "unsupported-security",
+    "request": "$friday faça uma auditoria de segurança deste sistema",
+    "expected_capability": "security",
+    "expected_disposition": "unsupported",
+    "manual_assertions": [
+      "The request is not converted to plan, generate, update, or audit.",
+      "The response does not claim that Security is implemented.",
+      "The project is not modified.",
+      "The unsupported capability limitation is communicated concisely."
+    ]
+  },
+  {
+    "id": "clarify-no-actionable-intent",
+    "request": "$friday",
+    "expected_capability": null,
+    "expected_disposition": "clarify",
+    "manual_assertions": [
+      "The assistant asks for clarification because no actionable intent was supplied.",
+      "No capability or Documentation workflow is selected before clarification."
+    ]
+  }
+]
