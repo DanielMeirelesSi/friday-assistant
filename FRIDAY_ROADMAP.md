@@ -12,11 +12,21 @@ Friday is intended to support the software lifecycle from repository analysis an
 
 **Stable release:** `v1.0.0`
 
-Current scope: repository documentation.
+Current scope: Friday Platform foundation with Documentation as the only implemented capability.
 
-Implemented capabilities:
+Implemented Platform foundation:
 
-- explicit `$friday` invocation;
+- one public `$friday` interface;
+- Friday Core boundary and capability taxonomy;
+- Operating Model and Context Model;
+- universal Evidence Model;
+- authority, risk, verification, convergence, and completion contracts;
+- progressive disclosure and capability routing;
+- unsupported-capability boundary;
+- Platform eval contracts.
+
+Implemented capability — Documentation:
+
 - natural-language intent routing;
 - `plan`;
 - `generate`;
@@ -31,7 +41,7 @@ Implemented capabilities:
 - idempotent documentation updates;
 - read-only `plan` and `audit` workflows.
 
-Documentation is the current reference implementation for future capabilities.
+Documentation remains the reference implementation for future capability migration. The Platform foundation does not mean that Architecture, Testing, Security, or another future capability is implemented.
 
 ---
 
@@ -140,20 +150,24 @@ All Phase 0 exit criteria are satisfied:
 
 ## Phase 1 — Friday Platform
 
-**Status:** Planned
+**Status:** Complete
 
-Objective: decouple Friday's core behavior from the documentation domain and provide a platform for multiple engineering capabilities.
+Objective: decouple Friday's core behavior from the Documentation domain and provide a platform for multiple engineering capabilities.
 
-Planned components:
+### Delivered
 
-- Friday Core;
-- operating model;
-- project context model;
-- capability routing;
-- authority and risk model;
-- verification contract;
-- progressive capability loading;
-- modular capability boundaries.
+- Core boundary;
+- taxonomy and capability model;
+- Operating Model;
+- Context Model;
+- universal Evidence Model;
+- Authority & Verification contract;
+- progressive disclosure;
+- Platform entrypoint;
+- unsupported-capability boundary;
+- Platform eval contracts;
+- Documentation compatibility preserved;
+- Documentation state remains capability-owned.
 
 Target architecture:
 
@@ -162,17 +176,23 @@ User Request
     ↓
 Intent
     ↓
-Project Context
+Context Bootstrap
     ↓
 Capability Routing
+    ↓
+Risk / Authority / Execution Depth
     ↓
 Evidence Acquisition
     ↓
 Execution Strategy
     ↓
-Verification
+Bounded Execution Loop
     ↓
-Result / State Update
+Verification / Convergence
+    ↓
+Completion
+    ↓
+Optional State / Artifact Update
 ```
 
 The user-facing interface remains:
@@ -180,6 +200,23 @@ The user-facing interface remains:
 ```text
 $friday
 ```
+
+### Exit Criteria
+
+- [x] Friday Core is separated from Documentation policy and the universal operating contracts are represented in `references/core/`.
+- [x] The Platform entrypoint uses progressive disclosure and keeps Documentation-specific references under the capability boundary.
+- [x] Documentation remains the only implemented capability; Architecture, Testing, Security, and other future capabilities remain unsupported or planned.
+- [x] `plan`, `generate`, `update`, and `audit` compatibility contracts remain protected, including read-only behavior, convergence, minimal diff, and state validation.
+- [x] Non-Documentation requests have an explicit unsupported or clarification boundary and are not silently routed to Documentation.
+- [x] Platform eval specifications cover supported Documentation routes, unsupported capabilities, and clarification behavior.
+- [x] `.friday/state.json`, its schema, and its guards remain Documentation-specific and valid.
+- [x] The Phase 0 validation and regression baseline remains protected by the existing tests and CI workflow.
+- [x] No speculative capability infrastructure or universal Platform State was introduced.
+- [x] The repository is structurally ready for Phase 2 — Documentation Capability Migration.
+
+Deterministic contracts and observable effects are automated in the repository test suite and CI. Semantic/manual assertions in the eval case files, including model or agent execution, remain external to CI and require manual review or an external harness.
+
+**Next milestone:** Phase 2 — Documentation Capability Migration.
 
 ---
 
