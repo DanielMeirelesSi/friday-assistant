@@ -29,7 +29,14 @@ For an actionable `$friday` request, load `references/core/platform.md` and `ref
 
 During Phase 1, Documentation is the only implemented capability. Its knowledge and workflows remain the authoritative implementation for documentation tasks. Architecture, Testing, Security, Requirements, Software Design, and other future capabilities are platform concepts or roadmap work, not implemented capabilities in this skill.
 
-Requests clearly outside Documentation must not be silently converted into `plan`, `generate`, `update`, or `audit`. Identify the requested intent and capability boundary; if the capability is not implemented, state that boundary and do not present a documentation workflow as a substitute.
+Requests clearly outside Documentation must not be silently converted into `plan`, `generate`, `update`, or `audit`. Identify the requested intent and capability boundary. When the identified capability is not implemented:
+
+- state concisely that the capability is not yet available;
+- do not convert the request into a Documentation workflow;
+- do not perform the work belonging to that capability as a generic fallback;
+- do not perform extensive repository investigation, tests, verification, or other actions beyond the minimum needed to identify the intent and capability;
+- do not modify the project;
+- stop after communicating the boundary.
 
 Do not create speculative capability directories, manifests, registries, agents, skills, schemas, or infrastructure merely because the platform may support them later.
 
