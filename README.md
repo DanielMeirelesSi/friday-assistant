@@ -51,12 +51,12 @@ Cada fluxo deve reunir evidências antes de fazer afirmações técnicas, detect
 | --- | --- |
 | `SKILL.md` | Entrypoint público da Friday Platform: bootstrap do Core, capability routing e acesso progressivo às referências necessárias. |
 | `references/core/` | Contratos universais da Platform: `platform.md`, `operating-model.md`, `context-model.md`, `evidence.md` e `authority-and-verification.md`. |
-| `references/documentation-standard.md` | Padrão de qualidade, dimensionamento e critérios de documentação. |
-| `references/repository-analysis.md` | Procedimento para levantar perfis, escopos, entradas, interfaces e fontes canônicas. |
-| `references/evidence-and-trust.md` | Aplicação do Evidence Model universal à capability Documentation. |
-| `references/documentation-writing.md` | Estilo, arquitetura da informação, comandos, links e regras de redação. |
-| `references/state-and-ownership.md` | Propriedade dos documentos e formato do estado persistente. |
-| `references/workflows/` | Procedimentos específicos para `plan`, `generate`, `update` e `audit`. |
+| `references/capabilities/documentation/documentation-standard.md` | Padrão de qualidade, dimensionamento e critérios de documentação. |
+| `references/capabilities/documentation/repository-analysis.md` | Procedimento para levantar perfis, escopos, entradas, interfaces e fontes canônicas. |
+| `references/capabilities/documentation/evidence-and-trust.md` | Aplicação do Evidence Model universal à capability Documentation. |
+| `references/capabilities/documentation/documentation-writing.md` | Estilo, arquitetura da informação, comandos, links e regras de redação. |
+| `references/capabilities/documentation/state-and-ownership.md` | Propriedade dos documentos e formato do estado persistente. |
+| `references/capabilities/documentation/workflows/` | Procedimentos específicos para `plan`, `generate`, `update` e `audit`. |
 | `tests/evals/platform_cases.json` | Contratos semânticos/manuais da fronteira da Platform e do roteamento de capabilities. |
 | `tests/evals/behavior_cases.json` | Contratos determinísticos atuais dos workflows de Documentation. |
 | `tests/evals/routing_cases.json` | Contratos/specs de routing dos workflows de Documentation. |
@@ -102,4 +102,4 @@ Ao alterar a skill, comece por `SKILL.md` e revalide as referências afetadas. A
 
 ## Fontes de referência
 
-Para entender ou manter o comportamento do Friday, leia `SKILL.md` primeiro. Em seguida, consulte o workflow correspondente em `references/workflows/` e as referências de análise, evidência, escrita e estado necessárias para a mudança.
+Para entender ou manter o comportamento do Friday, leia `SKILL.md` primeiro. Em seguida, consulte o workflow correspondente em `references/capabilities/documentation/workflows/` e as referências de análise, evidência, escrita e estado necessárias para a mudança.

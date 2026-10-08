@@ -26,23 +26,23 @@ If Documentation intent is ambiguous or lacks an actionable workflow, ask for cl
 
 Read:
 
-- `references/documentation-standard.md`;
-- `references/repository-analysis.md`;
-- `references/evidence-and-trust.md`;
-- `references/workflows/plan.md`.
+- `references/capabilities/documentation/documentation-standard.md`;
+- `references/capabilities/documentation/repository-analysis.md`;
+- `references/capabilities/documentation/evidence-and-trust.md`;
+- `references/capabilities/documentation/workflows/plan.md`.
 
-Read `references/state-and-ownership.md` when existing `.friday/` state is relevant. `plan` is static-analysis-first and must not run build, lint, test, install, generation, or other potentially writing commands merely to increase confidence. It does not modify project documentation or persistent state.
+Read `references/capabilities/documentation/state-and-ownership.md` when existing `.friday/` state is relevant. `plan` is static-analysis-first and must not run build, lint, test, install, generation, or other potentially writing commands merely to increase confidence. It does not modify project documentation or persistent state.
 
 ### `generate`
 
 Read:
 
-- `references/documentation-standard.md`;
-- `references/repository-analysis.md`;
-- `references/evidence-and-trust.md`;
-- `references/documentation-writing.md`;
-- `references/state-and-ownership.md`;
-- `references/workflows/generate.md`.
+- `references/capabilities/documentation/documentation-standard.md`;
+- `references/capabilities/documentation/repository-analysis.md`;
+- `references/capabilities/documentation/evidence-and-trust.md`;
+- `references/capabilities/documentation/documentation-writing.md`;
+- `references/capabilities/documentation/state-and-ownership.md`;
+- `references/capabilities/documentation/workflows/generate.md`.
 
 Create or complete only the smallest appropriate evidence-grounded documentation, preserve valuable existing human knowledge, validate applicable paths, commands, links, claims, and canonical relationships, and persist state only after successful validation. Capture the Git baseline before documentation writes. A repeated `generate` with unchanged inputs and valid documentation/state must converge to no content or state diff; do not introduce timestamp-only or stylistic churn.
 
@@ -50,13 +50,13 @@ Create or complete only the smallest appropriate evidence-grounded documentation
 
 Read:
 
-- `references/evidence-and-trust.md`;
-- `references/documentation-writing.md`;
-- `references/state-and-ownership.md`;
-- `references/workflows/update.md`;
-- `references/documentation-standard.md` when scope or structure may need reconsideration;
-- `references/repository-analysis.md` for affected areas;
-- `references/workflows/plan.md` when broader replanning is needed.
+- `references/capabilities/documentation/evidence-and-trust.md`;
+- `references/capabilities/documentation/documentation-writing.md`;
+- `references/capabilities/documentation/state-and-ownership.md`;
+- `references/capabilities/documentation/workflows/update.md`;
+- `references/capabilities/documentation/documentation-standard.md` when scope or structure may need reconsideration;
+- `references/capabilities/documentation/repository-analysis.md` for affected areas;
+- `references/capabilities/documentation/workflows/plan.md` when broader replanning is needed.
 
 Revalidate changed or affected knowledge, preserve human edits, distinguish evidence changes from documentation drift, and make the smallest justified documentation diff. Do not silently erase human work or modify source code to satisfy stale documentation.
 
@@ -64,12 +64,12 @@ Revalidate changed or affected knowledge, preserve human edits, distinguish evid
 
 Read:
 
-- `references/documentation-standard.md`;
-- `references/repository-analysis.md` as needed;
-- `references/evidence-and-trust.md`;
-- `references/documentation-writing.md`;
-- `references/state-and-ownership.md`;
-- `references/workflows/audit.md`.
+- `references/capabilities/documentation/documentation-standard.md`;
+- `references/capabilities/documentation/repository-analysis.md` as needed;
+- `references/capabilities/documentation/evidence-and-trust.md`;
+- `references/capabilities/documentation/documentation-writing.md`;
+- `references/capabilities/documentation/state-and-ownership.md`;
+- `references/capabilities/documentation/workflows/audit.md`.
 
 Audit material claims, canonical sources, commands, paths, links, ownership, state, conflicts, and project issues without modifying project documentation, source code, dependencies, infrastructure, or persistent state.
 
