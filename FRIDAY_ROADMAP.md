@@ -41,7 +41,7 @@ Implemented capability — Documentation:
 - idempotent documentation updates;
 - read-only `plan` and `audit` workflows.
 
-Documentation remains the reference implementation for future capability migration. The Platform foundation does not mean that Architecture, Testing, Security, or another future capability is implemented.
+Documentation is the first capability formally migrated into the Platform structure and remains the only implemented capability. Architecture, Testing, Security, and other future capabilities are not implemented.
 
 ---
 
@@ -222,30 +222,62 @@ Deterministic contracts and observable effects are automated in the repository t
 
 ## Phase 2 — Documentation Capability Migration
 
-**Status:** Planned
+**Status:** Complete
 
 Objective: migrate the current documentation system into the multi-capability platform without behavior regressions.
 
-Must preserve:
+### Delivered
 
-- `plan`;
-- `generate`;
-- `update`;
-- `audit`;
-- evidence model;
-- canonical sources;
-- claims;
-- ownership;
-- persisted state;
-- state guards;
-- idempotency;
-- intent routing.
+- `ecadd28` — `refactor: introduce Documentation capability entrypoint`
+  - `SKILL.md` remained the only public entrypoint;
+  - `references/capabilities/documentation/capability.md` became Documentation's internal entrypoint;
+  - Documentation-specific routing and policy moved out of the Platform entrypoint;
+  - structural tests were added.
+- `2b9044c` — `refactor: migrate Documentation into capability structure`
+  - five Documentation-specific references and four workflows moved to `references/capabilities/documentation/`;
+  - all nine migrated files remained byte-for-byte identical;
+  - operational paths were updated;
+  - Core, guards, state schema, and behavior fixtures remained intact.
+
+### Validation
+
+**Deterministic / CI**
+
+- structural tests for the new layout passed;
+- GitHub Actions Validation passed after Batch 1 and Batch 2;
+- Python guard contract and Python / PowerShell parity remained green;
+- the existing deterministic regression baseline remained protected.
+
+**Agentic / manual (external to CI)**
+
+- Documentation `plan` passed read-only validation;
+- Architecture unsupported boundary passed;
+- `$friday` without intent correctly requested clarification;
+- Documentation `audit` passed read-only validation;
+- `update` preserved human work and made only the necessary state update;
+- `generate` passed, and a second `generate` converged byte-for-byte;
+- the state guard validated the updated state;
+- no legacy path remained in state;
+- the persisted README hash matched the current bytes.
+
+CI validates deterministic repository checks and does not execute the model or agent; the agentic smoke tests above were manual/external.
 
 ### Exit Criteria
 
-- current documentation regression suite passes;
-- documentation behavior is isolated from Friday Core;
-- documentation is loaded as a capability rather than defining the platform itself.
+- [x] Documentation is physically isolated in `references/capabilities/documentation/`.
+- [x] `SKILL.md` routes Documentation through the capability entrypoint, not directly to workflows.
+- [x] Core remains independent of Documentation-specific policy.
+- [x] `plan`, `generate`, `update`, and `audit` remain operational.
+- [x] `plan` and `audit` preserve read-only behavior.
+- [x] `update` preserves minimal-diff behavior.
+- [x] `generate` preserves idempotency and convergence.
+- [x] `.friday/state.json` remains Documentation state, not Platform State.
+- [x] State schema and state guards were not redesigned.
+- [x] Unsupported-capability and clarification boundaries remain in place.
+- [x] The regression and CI baseline remains green.
+- [x] No registry, manifest, Platform State, or future capability was introduced.
+
+**Next milestone:** Phase 3 — Architecture.
 
 ---
 
